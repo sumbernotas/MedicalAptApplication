@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Appointments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+    <div class="content-container">
+        <div class="content-header">
+            <h1>Appointments</h1>
+            <div class="header-buttons">
+                <a href="/" class="btn btn-circle btn-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <a href="/appointments/new" class="btn btn-primary">Add New Appointment</a>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.ID}"></td>
+                    <td>
+                        <span th:each="p : ${patients}" th:if="${p.ID == appointment.patientID}" th:text="${p.name}">
+                        </span>
+                    </td>
+                    <td th:text="${appointment.doctorName}"></td>
+                    <td th:text="${appointment.aptDate}"></td>
+                    <td th:text="${appointment.description}"></td>
+                    <td>
+                        <a th:href="@{/appointments/delete/{id}(id=${appointment.ID})}"
+                            class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

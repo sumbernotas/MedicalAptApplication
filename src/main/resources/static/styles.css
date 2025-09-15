@@ -1,0 +1,158 @@
+body {
+    background-color: #F8F8F8;
+    display: flex;
+    justify-content: center;   
+    align-items: center;                   
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.head-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border: 3px solid #e8e8e8;
+    max-width: 500px;
+    width: 100%;
+}
+
+.head-container h1 {
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-group-vertical .btn {
+    margin: 8px 0;
+    padding: 12px 30px;
+    font-size: 16px;
+    min-width: 250px;
+    border-radius: 8px;
+    border: none !important;
+    outline: none !important;
+}
+
+body:has(.content-container) {
+    background-color: #F8F8F8;
+    display: block;
+    text-align: left;
+    padding: 40px;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Main container for patients page */
+.content-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border: 3px solid #e8e8e8;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header layout with title left, buttons right */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.content-container h1 {
+    margin: 0;
+    color: #333;
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+
+/* Button group on the right */
+.header-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.header-buttons .btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none !important;
+    outline: none !important;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Icon styling in buttons */
+.btn-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center !important;
+    font-size: 32px !important;
+    font-weight: bold !important;
+}
+
+.content-container .table {
+    margin: 0;
+    background-color: #fff;
+}
+
+.content-container .table th {
+    background-color: #9AB7B9;
+    color: white;
+    border: none;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.content-container .table td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border-color: #e8e8e8;
+}
+
+.content-container .table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Danger button styling */
+.btn-danger {
+    background-color: #e46d79 !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.btn-danger:hover {
+    background-color: #c82333 !important;
+}
+
+.btn-primary {
+    background-color: #9AB7B9 !important;
+}
+
+.btn-primary:hover {
+    background-color: #5C8284 !important;
+}
+
+.btn-secondary {
+    background-color: #D69471 !important;
+}
+
+.btn-secondary:hover {
+    background-color: #BE6637 !important;
+}
+
