@@ -44,7 +44,7 @@ body:has(.content-container) {
     min-height: 100vh;
 }
 
-/* Main container for patients page */
+/* Main container for patients & appointments page */
 .content-container {
     background-color: #ffffff;
     border-radius: 20px;
@@ -89,7 +89,7 @@ body:has(.content-container) {
     transition: all 0.3s ease;
 }
 
-/* Icon styling in buttons */
+/* Icon styling in home button */
 .btn-circle {
     width: 50px;
     height: 50px;
@@ -102,6 +102,7 @@ body:has(.content-container) {
     font-weight: bold !important;
 }
 
+/* table styling */
 .content-container .table {
     margin: 0;
     background-color: #fff;
@@ -136,6 +137,21 @@ body:has(.content-container) {
     font-size: 14px;
 }
 
+/* form styling */
+.form-container form {
+    width: 30% !important;
+    margin: auto;
+}
+
+.form-container button {
+    border: none !important;
+    outline: none !important;
+    width: 50% !important;
+    margin-left: 25% !important;
+}
+
+/* basic universal button styling */
+
 .btn-danger:hover {
     background-color: #c82333 !important;
 }
@@ -156,3 +172,10 @@ body:has(.content-container) {
     background-color: #BE6637 !important;
 }
 
+.btn-success {
+    background-color: #9AB7B9 !important;
+}
+
+.btn-success:hover {
+    background-color: #5C8284 !important;
+}

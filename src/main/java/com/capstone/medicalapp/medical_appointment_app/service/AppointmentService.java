@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.medicalapp.medical_appointment_app.model.Appointment;
 
+// temporarily acts as in-memory database
 @Service
 public class AppointmentService {
     private final Map<Long, Appointment> appointments = new HashMap<>();
