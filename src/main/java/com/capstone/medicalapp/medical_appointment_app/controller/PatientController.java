@@ -46,9 +46,51 @@ public class PatientController {
 
         try {
             Patient addedPatient = patientService.addPatient(patient);
-            redirectAttributes.addFlashAttribute("successMessage", "Patient " + addedPatient.getName() + " has been successfully added with ID: " + addedPatient.getPatientID());
+            redirectAttributes.addFlashAttribute("successMessage", "Patient " + addedPatient.getName() + " added successfully with ID: " + addedPatient.getPatientID());
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred while adding the patient.");
+        }
+        
+        return "redirect:/patients";
+    }
+
+    @GetMapping("/edit/{patientID}")
+    public String showEditForm(@PathVariable String patientID, Model model, RedirectAttributes redirectAttributes) {
+        var patient = patientService.getPatientById(patientID);
+        
+        if (patient.isPresent()) {
+            model.addAttribute("patient", patient.get());
+            model.addAttribute("isEdit", true);
+            return "add-patient"; // Reuse the same form for editing
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", 
+                "Patient with ID " + patientID + " not found");
+            return "redirect:/patients";
+        }
+    }
+
+    @PostMapping("/update/{patientID}")
+    public String updatePatient(@PathVariable String patientID, @Valid @ModelAttribute Patient patient, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "add-patient"; 
+        }
+        
+        try {
+            var updatedPatient = patientService.updatePatient(patientID, patient);
+            if (updatedPatient.isPresent()) {
+                redirectAttributes.addFlashAttribute("successMessage", 
+                    "Patient " + updatedPatient.get().getName() + " updated successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", 
+                    "Patient with ID " + patientID + " not found");
+            }
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", 
+                "An unexpected error occurred while updating the patient.");
         }
         
         return "redirect:/patients";
