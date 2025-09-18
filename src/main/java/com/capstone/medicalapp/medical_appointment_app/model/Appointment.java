@@ -2,20 +2,17 @@ package com.capstone.medicalapp.medical_appointment_app.model;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class Appointment {
-    private Long ID;
-    private Long patientID;
+    private String appointmentID;
+    private String patientID;
 
     @NotBlank(message = "Doctor's name is required")
     @Size(max = 25, message = "Doctor's name cannot exceed 25 characters")
     private String doctorName;
 
-    // declares Date variable for appt date - cannot be a date in the past
-    @Future(message = "Appointment date must be in the future")
     private LocalDate aptDate;
 
     // declares a variable to hold appt description - cannot be blank and has a max length
@@ -23,10 +20,20 @@ public class Appointment {
     @Size(max = 40, message = "Description cannot exceed 40 characters")
     private String description;
 
+    // default constructor
     public Appointment() {}
 
-    public Appointment(Long ID, Long patientID, String doctorName, LocalDate aptDate, String description) {
-        this.ID = ID;
+    // constructor with all fields
+    public Appointment(String appointmentID, String patientID, String doctorName, LocalDate aptDate, String description) {
+        this.appointmentID = appointmentID;
+        this.patientID = patientID;
+        this.doctorName = doctorName;
+        this.aptDate = aptDate;
+        this.description = description;
+    }
+
+    // constructor with ID, specifically for new appointments
+    public Appointment(String patientID, String doctorName, LocalDate aptDate, String description) {
         this.patientID = patientID;
         this.doctorName = doctorName;
         this.aptDate = aptDate;
@@ -37,11 +44,11 @@ public class Appointment {
     /// class setters and getters
     /////////
 
-    public Long getID() {return ID;}
-    public void setID(Long ID) {this.ID = ID;}
+    public String getAppointmentID() {return appointmentID;}
+    public void setAppointmentID(String appointmentID) {this.appointmentID = appointmentID;}
 
-    public Long getPatientID() {return patientID;}
-    public void setPatientID(Long patientID) {this.patientID = patientID;}
+    public String getPatientID() {return patientID;}
+    public void setPatientID(String patientID) {this.patientID = patientID;}
 
     public String getDoctorName() {return doctorName;}
     public void setDoctorName(String doctorName) {this.doctorName = doctorName;}
@@ -52,4 +59,28 @@ public class Appointment {
     public String getDescription() {return description;}
     public void setDescription(String description) {this.description = description;}
     
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "appointmentID='" + appointmentID + '\'' +
+                ", patientID='" + patientID + '\'' +
+                ", doctorName='" + doctorName + '\'' +
+                ", aptDate=" + aptDate +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        Appointment appointment = (Appointment) obj;
+        return appointmentID != null ? appointmentID.equals(appointment.appointmentID) : appointment.appointmentID == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return appointmentID != null ? appointmentID.hashCode() : 0;
+    }
 }

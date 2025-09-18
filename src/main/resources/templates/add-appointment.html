@@ -1,47 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Add Appointment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
+
 <body>
     <div class="content-container">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-2">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="content-header">
             <h1>Add Appointment</h1>
             <div class="header-buttons">
-                <a href="/" class="btn btn-circle btn-secondary">
+                <a href="/appointments" class="btn btn-circle btn-secondary">
                     <i class="bi bi-arrow-left"></i>
                 </a>
             </div>
         </div>
+
         <div class="form-container">
             <form action="/appointments" method="post" th:object="${appointment}">
+
                 <div class="mb-3">
-                    <label>Patient:</label>
-                    <select th:field="*{patientID}" class="form-control">
-                        <option th:each="patient : ${patients}" 
-                                th:value="${patient.ID}" 
-                                th:text="${patient.name}">
+                    <label class="form-label">Patient:</label>
+                    <select th:field="*{patientID}" class="form-control" required>
+                        <option value="">Select a patient...</option>
+                        <option th:each="patient : ${patients}" th:value="${patient.patientID}"
+                            th:text="${patient.name}">
                         </option>
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Doctor:</label>
-                    <input type="text" th:field="*{doctorName}" class="form-control" />
+                    <input type="text" th:field="*{doctorName}" class="form-control" placeholder="Enter doctor's name"
+                        required />
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Date:</label>
-                    <input type="date" th:field="*{aptDate}" class="form-control" />
+                    <input type="date" th:field="*{aptDate}" class="form-control" required />
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Description:</label>
-                    <input type="text" th:field="*{description}" class="form-control" />
+                    <input type="text" th:field="*{description}" class="form-control"
+                        placeholder="Enter appointment description" maxlength="40" required />
                 </div>
+
                 <button type="submit" class="btn btn-success">Save Appointment</button>
             </form>
         </div>
     </div>
 </body>
+
 </html>

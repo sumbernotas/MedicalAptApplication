@@ -10,6 +10,14 @@
 
 <body>
     <div class="content-container">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="content-header">
             <h1>Appointments</h1>
             <div class="header-buttons">
@@ -18,6 +26,9 @@
                 </a>
                 <a href="/appointments/new" class="btn btn-primary">Add New Appointment</a>
             </div>
+        </div>
+        <div class="mb-3">
+            <strong>Total Appointments: <span th:text="${#lists.size(appointments)}">0</span></strong>
         </div>
         <table class="table table-bordered">
             <thead>
@@ -32,22 +43,28 @@
             </thead>
             <tbody>
                 <tr th:each="appointment : ${appointments}">
-                    <td th:text="${appointment.ID}"></td>
+                    <td th:text="${appointment.appointmentID}"></td>
                     <td>
-                        <span th:each="p : ${patients}" th:if="${p.ID == appointment.patientID}" th:text="${p.name}">
+                        <span th:each="p : ${patients}" th:if="${p.patientID == appointment.patientID}" th:text="${p.name}">
                         </span>
                     </td>
                     <td th:text="${appointment.doctorName}"></td>
                     <td th:text="${appointment.aptDate}"></td>
                     <td th:text="${appointment.description}"></td>
                     <td>
-                        <a th:href="@{/appointments/delete/{id}(id=${appointment.ID})}"
-                            class="btn btn-danger btn-sm">Delete</a>
+                        <a th:href="@{/appointments/edit/{appointmentID}(appointmentID=${appointment.appointmentID})}" 
+                           class="btn btn-warning btn-sm me-2">Edit</a>
+                        <a th:href="@{/appointments/delete/{appointmentID}(appointmentID=${appointment.appointmentID})}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</a>
                     </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(appointments)}">
+                    <td colspan="6" class="text-center text-muted">No appointments found</td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
