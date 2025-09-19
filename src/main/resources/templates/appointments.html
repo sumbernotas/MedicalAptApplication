@@ -45,18 +45,19 @@
                 <tr th:each="appointment : ${appointments}">
                     <td th:text="${appointment.appointmentID}"></td>
                     <td>
-                        <span th:each="p : ${patients}" th:if="${p.patientID == appointment.patientID}" th:text="${p.name}">
+                        <span th:each="p : ${patients}" th:if="${p.patientID == appointment.patientID}"
+                            th:text="${p.name}">
                         </span>
                     </td>
                     <td th:text="${appointment.doctorName}"></td>
                     <td th:text="${appointment.aptDate}"></td>
                     <td th:text="${appointment.description}"></td>
                     <td>
-                        <a th:href="@{/appointments/edit/{appointmentID}(appointmentID=${appointment.appointmentID})}" 
-                           class="btn btn-warning btn-sm me-2">Edit</a>
-                        <a th:href="@{/appointments/delete/{appointmentID}(appointmentID=${appointment.appointmentID})}" 
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</a>
+                        <a th:href="@{/appointments/edit/{appointmentID}(appointmentID=${appointment.appointmentID})}"
+                            class="btn btn-warning btn-sm me-2">Edit</a>
+                        <a th:href="@{/appointments/delete/{appointmentID}(appointmentID=${appointment.appointmentID})}"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</a>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(appointments)}">
@@ -67,4 +68,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
