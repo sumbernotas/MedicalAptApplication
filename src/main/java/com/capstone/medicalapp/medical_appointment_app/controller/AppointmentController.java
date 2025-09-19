@@ -63,6 +63,7 @@ public class AppointmentController {
         return "redirect:/appointments";
     }
 
+    // shows form to edit a pre-existing appointment
     @GetMapping("/edit/{appointmentID}")
     public String showEditForm(@PathVariable String appointmentID, Model model, RedirectAttributes redirectAttributes) {
         var appointment = appointmentService.getAppointmentById(appointmentID);
@@ -78,6 +79,7 @@ public class AppointmentController {
         }
     }
 
+    // updates pre-existing appointment by ID
     @PostMapping("/update/{appointmentID}")
     public String updateAppointment(@PathVariable String appointmentID, @Valid @ModelAttribute Appointment appointment, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {

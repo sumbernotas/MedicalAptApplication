@@ -10,6 +10,7 @@
 
 <body>
     <div class="content-container">
+
         <div class="content-header">
             <h1 th:text="${isEdit} ? 'Edit Appointment' : 'Add Appointment'">Add Appointment</h1>
             <div class="header-buttons">
@@ -18,53 +19,40 @@
                 </a>
             </div>
         </div>
+
         <div class="form-container">
-            <form th:action="${isEdit} ? '/appointments/update/' + ${appointment.appointmentID} : '/appointments'" 
-                  method="post" 
-                  th:object="${appointment}">
-                
+            <form th:action="${isEdit} ? '/appointments/update/' + ${appointment.appointmentID} : '/appointments'"
+                method="post" th:object="${appointment}">
+
                 <div class="mb-3">
                     <label class="form-label">Patient:</label>
                     <select th:field="*{patientID}" class="form-control" required>
                         <option value="">Select a patient...</option>
-                        <option th:each="patient : ${patients}" 
-                                th:value="${patient.patientID}" 
-                                th:text="${patient.name}">
+                        <option th:each="patient : ${patients}" th:value="${patient.patientID}"
+                            th:text="${patient.name}">
                         </option>
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Doctor:</label>
-                    <input type="text" 
-                           th:field="*{doctorName}" 
-                           class="form-control"
-                           placeholder="Enter doctor's name"
-                           maxlength="25"
-                           required />
+                    <input type="text" th:field="*{doctorName}" class="form-control" placeholder="Enter doctor's name"
+                        maxlength="25" required />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Date:</label>
-                    <input type="date" 
-                           th:field="*{aptDate}" 
-                           class="form-control"
-                           required />
+                    <input type="date" th:field="*{aptDate}" class="form-control" required />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Description:</label>
-                    <textarea th:field="*{description}" 
-                              class="form-control"
-                              rows="3"
-                              placeholder="Enter appointment description"
-                              maxlength="40"
-                              required></textarea>
+                    <textarea th:field="*{description}" class="form-control" rows="3"
+                        placeholder="Enter appointment description" maxlength="40" required></textarea>
                 </div>
 
-                <button type="submit" 
-                        class="btn btn-success"
-                        th:text="${isEdit} ? 'Update Appointment' : 'Save Appointment'">
+                <button type="submit" class="btn btn-success"
+                    th:text="${isEdit} ? 'Update Appointment' : 'Save Appointment'">
                     Save Appointment
                 </button>
             </form>

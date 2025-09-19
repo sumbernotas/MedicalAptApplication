@@ -6,14 +6,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class Appointment {
+    // declares variabl
     private String appointmentID;
     private String patientID;
+    private LocalDate aptDate;
 
+    // declareds variable to hold doctors name with first layer of validation - cannot be blank and has a max length
     @NotBlank(message = "Doctor's name is required")
     @Size(max = 25, message = "Doctor's name cannot exceed 25 characters")
     private String doctorName;
-
-    private LocalDate aptDate;
 
     // declares a variable to hold appt description - cannot be blank and has a max length
     @NotBlank(message = "Description is required")

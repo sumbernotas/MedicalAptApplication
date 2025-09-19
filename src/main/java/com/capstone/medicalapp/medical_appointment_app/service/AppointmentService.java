@@ -16,9 +16,11 @@ import com.capstone.medicalapp.medical_appointment_app.model.Appointment;
 // temporarily acts as in-memory database
 @Service
 public class AppointmentService {
-    private final Map<String, Appointment> appointments = new HashMap<>();
+    private final Map<String, Appointment> appointments = new HashMap<>(); // temporary in-memory database
     private final AtomicLong idGeneration = new AtomicLong(2000);
 
+    // declares constant for input length 
+    // TODO: redundant with HTML & testing, will fix with MySQL implementation
     private final byte DOCTOR_LENGTH = 25;
     private final byte DESCRIPTION_LENGTH = 40;
 
@@ -30,11 +32,12 @@ public class AppointmentService {
         return "APT" + idGeneration.incrementAndGet();
     }
 
-    // returns all appointments within map
+    // returns all appointments within map "database"
     public List<Appointment> getAllAppointments() {
         return new ArrayList<>(appointments.values());
     }
 
+    // adds appointment to map
     public Appointment addAppointment(Appointment apt) {
         if (apt == null) {
             throw new IllegalArgumentException("Appointment cannot be null");
@@ -57,7 +60,7 @@ public class AppointmentService {
         return apt;
     }
 
-    // gets an apt by its ID
+    // gets an appointmentt by its ID
     public Optional<Appointment> getAppointmentById(String appointmentID) {
         if (appointmentID == null || appointmentID.trim().isEmpty()) {
             return Optional.empty();
@@ -104,7 +107,7 @@ public class AppointmentService {
         return appointments.values().stream().filter(apt -> patientID.equals(apt.getPatientID())).toList();
     }
 
-    // gets appointments for a specific date
+    // gets apt for a specific date
     public List<Appointment> getAppointmentsByDate(LocalDate date) {
         if (date == null) {
             return new ArrayList<>();
@@ -135,6 +138,7 @@ public class AppointmentService {
         return appointmentIdsToDelete.size();
     }
 
+    // validates appointment input information
     private void validateAppointmentData(Appointment apt) {
         // Validate patient ID
         if (apt.getPatientID() == null || apt.getPatientID().trim().isEmpty()) {

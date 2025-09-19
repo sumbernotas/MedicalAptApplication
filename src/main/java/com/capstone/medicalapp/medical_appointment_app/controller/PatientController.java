@@ -34,10 +34,13 @@ public class PatientController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("patient", new Patient());
-        return "add-patient"; // will look for add-patient.html
+        //model.addAttribute("nameMaxLength", patientService.NAME_LENGTH);
+        //model.addAttribute("phoneMaxLength", patientService.PHONE_LENGTH);
+
+        return "add-patient"; 
     }
 
-    // Handle form submission
+    // shows form to add a new patient
     @PostMapping
     public String addPatient(@Valid @ModelAttribute Patient patient, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -56,6 +59,7 @@ public class PatientController {
         return "redirect:/patients";
     }
 
+    // shows form to edit a patient per patientID
     @GetMapping("/edit/{patientID}")
     public String showEditForm(@PathVariable String patientID, Model model, RedirectAttributes redirectAttributes) {
         var patient = patientService.getPatientById(patientID);
@@ -71,6 +75,7 @@ public class PatientController {
         }
     }
 
+    // updated patient info per ID
     @PostMapping("/update/{patientID}")
     public String updatePatient(@PathVariable String patientID, @Valid @ModelAttribute Patient patient, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {

@@ -14,15 +14,13 @@ import com.capstone.medicalapp.medical_appointment_app.model.Patient;
 // Temporarily acts as in-memory database
 @Service
 public class PatientService {
-    //declares map to act as temp database to store patients
-    private final Map<String, Patient> patients = new HashMap<>();
+    private final Map<String, Patient> patients = new HashMap<>();  // temporary in-memory database
+    private final AtomicLong idGeneration = new AtomicLong(1000); // declares AtomicLong value to enable complex & unique ID generation
 
-    // declared AtomicLong value to enable complex & unique patientID generation
-    private final AtomicLong idGeneration = new AtomicLong(1000);
-
-    // declares input length constants for validation
-    private final byte NAME_LENGTH = 25;
-    private final byte PHONE_LENGTH = 10;
+    // declares constant for input length 
+    // TODO: redundant with HTML & testing, will fix with MySQL implementation
+    public static final int NAME_LENGTH = 25;
+    public static final int PHONE_LENGTH = 10;
 
     // generate a uniqiue patient ID, with prefix "PAT"
     private String generatePatientID() {
