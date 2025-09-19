@@ -11,10 +11,7 @@ A comprehensive web-based medical appointment scheduling system built with Sprin
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API Documentation](#api-documentation)
 - [Testing](#testing)
-- [Database Schema](#database-schema)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
