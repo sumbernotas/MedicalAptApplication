@@ -1,151 +1,150 @@
 package com.capstone.medicalapp.medical_appointment_app.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.capstone.medicalapp.medical_appointment_app.model.Appointment;
+import com.capstone.medicalapp.medical_appointment_app.repository.AppointmentRepository;
 
-// temporarily acts as in-memory database
+// ensures database is consistent
 @Service
+@Transactional
 public class AppointmentService {
-    private final Map<String, Appointment> appointments = new HashMap<>(); // temporary in-memory database
-    private final AtomicLong idGeneration = new AtomicLong(2000);
-
-    // declares constant for input length 
-    // TODO: redundant with HTML & testing, will fix with MySQL implementation
-    private final byte DOCTOR_LENGTH = 25;
-    private final byte DESCRIPTION_LENGTH = 40;
-
+    
     @Autowired
-    private PatientService patientService; 
-
-    // generates a complex and unique apt ID with prefix
+    private AppointmentRepository appointmentRepository;
+    
+    @Autowired
+    private PatientService patientService;
+    
+    private final AtomicLong idGeneration = new AtomicLong(2000);
+    
+    private static final byte DOCTOR_LENGTH = 25;
+    private static final byte DESCRIPTION_LENGTH = 40;
+    
     private String generateAppointmentID() {
         return "APT" + idGeneration.incrementAndGet();
     }
-
-    // returns all appointments within map "database"
+    
+    // returns all scheduled appointments
     public List<Appointment> getAllAppointments() {
-        return new ArrayList<>(appointments.values());
+        return appointmentRepository.findAll();
     }
-
-    // adds appointment to map
+    
+    // adds a new appointment to the database using pre-existing patient in database
     public Appointment addAppointment(Appointment apt) {
         if (apt == null) {
             throw new IllegalArgumentException("Appointment cannot be null");
         }
         
-        // Validate apt data
         validateAppointmentData(apt);
         
-        // Validate that patient exists
         if (!patientService.patientExists(apt.getPatientID())) {
             throw new IllegalArgumentException("Patient with ID " + apt.getPatientID() + " does not exist");
         }
         
-        // Generate and set unique ID
         String appointmentId = generateAppointmentID();
         apt.setAppointmentID(appointmentId);
         
-        // Store apt
-        appointments.put(appointmentId, apt);
-        return apt;
+        return appointmentRepository.save(apt);
     }
-
-    // gets an appointmentt by its ID
+    
+    // returns an appointment by the id
     public Optional<Appointment> getAppointmentById(String appointmentID) {
         if (appointmentID == null || appointmentID.trim().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(appointments.get(appointmentID));
+        return appointmentRepository.findByAppointmentID(appointmentID);
     }
-
-    // deletes an apt by its ID
+    
     public boolean deleteAppointment(String appointmentID) {
         if (appointmentID == null || appointmentID.trim().isEmpty()) {
             return false;
         }
-
-        return appointments.remove(appointmentID) != null;
+        
+        Optional<Appointment> appointment = appointmentRepository.findByAppointmentID(appointmentID);
+        if (appointment.isPresent()) {
+            appointmentRepository.delete(appointment.get());
+            return true;
+        }
+        return false;
     }
-
-    // updates an existing appointments information
+    
+    // updates an appointment according to the appt id
     public Optional<Appointment> updateAppointment(String appointmentID, Appointment updatedApt) {
         if (appointmentID == null || appointmentID.trim().isEmpty()) {
             return Optional.empty();
         }
-
-        if (!appointments.containsKey(appointmentID)) {
+        
+        Optional<Appointment> existingApt = appointmentRepository.findByAppointmentID(appointmentID);
+        if (existingApt.isEmpty()) {
             return Optional.empty();
         }
-
+        
         validateAppointmentData(updatedApt);
-
+        
         if (!patientService.patientExists(updatedApt.getPatientID())) {
             throw new IllegalArgumentException("Patient with ID: " + updatedApt.getPatientID() + " does not exist");
         }
-
-        updatedApt.setAppointmentID(appointmentID);
-        appointments.put(appointmentID, updatedApt);
-        return Optional.of(updatedApt);
+        
+        Appointment apt = existingApt.get();
+        apt.setPatientID(updatedApt.getPatientID());
+        apt.setDoctorName(updatedApt.getDoctorName());
+        apt.setAptDate(updatedApt.getAptDate());
+        apt.setDescription(updatedApt.getDescription());
+        
+        return Optional.of(appointmentRepository.save(apt));
     }
-
-    // gets appointments for a specific patient
+    
+    // returns an appointment according to the patient id assigned to it
     public List<Appointment> getAppointmentsByPatientID(String patientID) {
         if (patientID == null || patientID.trim().isEmpty()) {
-            return new ArrayList<>();
+            return List.of();
         }
-
-        return appointments.values().stream().filter(apt -> patientID.equals(apt.getPatientID())).toList();
+        return appointmentRepository.findByPatientID(patientID);
     }
-
-    // gets apt for a specific date
+    
+    // returns appointments by date
     public List<Appointment> getAppointmentsByDate(LocalDate date) {
         if (date == null) {
-            return new ArrayList<>();
+            return List.of();
         }
-
-        return appointments.values().stream().filter(apt -> date.equals(apt.getAptDate())).toList();
+        return appointmentRepository.findByAptDate(date);
     }
-
+    
+    // returns number of appointments in database
     public int getAppointmentCount() {
-        return appointments.size();
+        return (int) appointmentRepository.count();
     }
-
+    
+    // checks if appt exists in database
     public boolean appointmentExists(String appointmentID) {
-        return appointmentID != null && appointments.containsKey(appointmentID);
+        return appointmentID != null && appointmentRepository.existsByAppointmentID(appointmentID);
     }
-
+    
+    // deletes an appointment according to to patient id assigned to it from the database
     public int deleteAppointmentsByPatientId(String patientId) {
         if (patientId == null || patientId.trim().isEmpty()) {
             return 0;
         }
         
-        List<String> appointmentIdsToDelete = appointments.entrySet().stream()
-                .filter(entry -> patientId.equals(entry.getValue().getPatientID()))
-                .map(Map.Entry::getKey)
-                .toList();
-        
-        appointmentIdsToDelete.forEach(appointments::remove);
-        return appointmentIdsToDelete.size();
+        List<Appointment> appointments = appointmentRepository.findByPatientID(patientId);
+        appointmentRepository.deleteAll(appointments);
+        return appointments.size();
     }
-
-    // validates appointment input information
+    
+    // validate information for adding a new appointment into the database
     private void validateAppointmentData(Appointment apt) {
-        // Validate patient ID
         if (apt.getPatientID() == null || apt.getPatientID().trim().isEmpty()) {
             throw new IllegalArgumentException("Patient ID cannot be blank");
         }
         
-        // Validate doctor name
         if (apt.getDoctorName() == null || apt.getDoctorName().trim().isEmpty()) {
             throw new IllegalArgumentException("Doctor name cannot be blank");
         }
@@ -154,7 +153,10 @@ public class AppointmentService {
             throw new IllegalArgumentException("Doctor name cannot exceed " + DOCTOR_LENGTH + " characters");
         }
         
-        // Validate apt date
+        if (!apt.getDoctorName().matches("^[a-zA-Z\\s'-\\.]+$")) {
+            throw new IllegalArgumentException("Doctor name can only contain letters, spaces, hyphens, apostrophes, and periods");
+        }
+        
         if (apt.getAptDate() == null) {
             throw new IllegalArgumentException("Appointment date cannot be blank");
         }
@@ -163,7 +165,6 @@ public class AppointmentService {
             throw new IllegalArgumentException("Appointment date must be in the future");
         }
         
-        // Validate description
         if (apt.getDescription() == null || apt.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("Description cannot be blank");
         }
